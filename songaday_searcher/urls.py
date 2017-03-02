@@ -15,7 +15,18 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from songs import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^$', views.index),
+    url(r'^search/$', views.search),
+    url(r'^search/(?P<text>w+)/$', views.search),
+    url(r'^tags/$', views.tags),
+    url(r'^tags/(?P<text>w+)/$', views.tag),
+    url(r'^today/$', views.today),
+    url(r'^songs/$', views.songs),
+    url(r'^songs/(?P<number>[0-9]+)/$', views.song),
+    url(r'^from/(?P<month>[0-9]{2})/(?P<day>[0-9]{2})/(?P<year>[0-9]{4})/$', views.date),
+    url(r'^lastupdated/$', views.last_updated),
 ]
