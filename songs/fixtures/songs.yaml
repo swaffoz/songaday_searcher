@@ -1,0 +1,49 @@
+-   model: songs.tag
+    pk: 1
+    fields: {text: folk}
+-   model: songs.tag
+    pk: 2
+    fields: {text: rock}
+-   model: songs.tag
+    pk: 3
+    fields: {text: dogs}
+-   model: songs.song
+    pk: 1
+    fields:
+        title: 'This is a test song #9876'
+        description: "This is a test song.\r\nHere is the description.\r\nThere might\
+            \ be lyrics in here."
+        url: https://www.youtube.com/watch?v=5u8jfMuZh7Y
+        view_count: 123
+        like_count: 345
+        dislike_count: 12
+        song_number: 9876
+        thumbnail_url: ''
+        release_date: 2017-02-28
+        tags: [1]
+-   model: songs.song
+    pk: 2
+    fields:
+        title: 'A Good Tune #9875'
+        description: "woohoo. here are the lyrics."
+        url: https://www.youtube.com/watch?v=5u8jfMuZh7Y
+        view_count: 4321
+        like_count: 465
+        dislike_count: 15
+        song_number: 9875
+        thumbnail_url: ''
+        release_date: 2017-02-27
+        tags: [1, 2]
+-   model: songs.song
+    pk: 3
+    fields:
+        title: 'Dog Theme #9874'
+        description: "bark bark bark bark bark."
+        url: https://www.youtube.com/watch?v=5u8jfMuZh7Y
+        view_count: 2
+        like_count: 0
+        dislike_count: 0
+        song_number: 9860
+        thumbnail_url: ''
+        release_date: 2017-01-26
+        tags: [3]

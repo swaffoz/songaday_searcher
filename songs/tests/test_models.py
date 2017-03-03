@@ -33,7 +33,6 @@ class SongModelTestCase(TestCase):
         with self.assertRaises(ValidationError):
             song.clean_fields()
 
-
     def test_song_with_short_url_is_invalid(self):
         """
         Songs should have a url of 4 characters or more. Any less is invalid.
@@ -66,15 +65,15 @@ class SongModelTestCase(TestCase):
         thumbnail_url = 'https://otters.io/'
         tag = Tag.objects.create(text='mytag')
 
-        song = Song.objects.create(song_number = song_number,
-                                   title = title,
-                                   description = description,
-                                   url = url,
-                                   release_date = release_date,
-                                   view_count = view_count,
-                                   like_count = like_count,
-                                   dislike_count = dislike_count,
-                                   thumbnail_url = thumbnail_url)
+        song = Song.objects.create(song_number=song_number,
+                                   title=title,
+                                   description=description,
+                                   url=url,
+                                   release_date=release_date,
+                                   view_count=view_count,
+                                   like_count=like_count,
+                                   dislike_count=dislike_count,
+                                   thumbnail_url=thumbnail_url)
         song.tags.add(tag)
         song.save()
         song.clean_fields()
@@ -88,10 +87,10 @@ class SongModelTestCase(TestCase):
         url = 'https://zaneswafford.com/'
         release_date = datetime.date.today()
 
-        song = Song.objects.create(song_number = song_number,
-                                   title = title,
-                                   url = url,
-                                   release_date = release_date)
+        song = Song.objects.create(song_number=song_number,
+                                   title=title,
+                                   url=url,
+                                   release_date=release_date)
 
         self.assertIn(str(song.song_number), str(song))
         self.assertIn(str(song.title), str(song))
