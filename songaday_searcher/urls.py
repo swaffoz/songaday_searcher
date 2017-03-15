@@ -22,13 +22,14 @@ from songs import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', cache_page(60 * 60)(views.index)),
-    url(r'^search/(?P<text>[^/|^$]+)/?$', cache_page(60 * 30)(views.search)),
-    url(r'^tags/?$', cache_page(60 * 30)(views.tags)),
-    url(r'^tags/(?P<text>[^/|^$]+)/?$', cache_page(60 * 30)(views.tags)),
-    url(r'^today/?$', cache_page(60 * 30)(views.today)),
-    url(r'^songs/?$', cache_page(60 * 30)(views.songs)),
-    url(r'^songs/(?P<number>[0-9]+)/?$', cache_page(60 * 30)(views.songs)),
-    url(r'^from/(?P<month>[0-9]{1,2})/(?P<day>[0-9]{1,2})/(?P<year>[0-9]{4})/?$', cache_page(60 * 30)(views.from_date)),
-    url(r'^lastupdated/?$', views.last_updated),
+    url(r'^$', cache_page(60 * 60)(views.index), name='index'),
+    url(r'^search/(?P<text>[^/|^$]+)/?$', cache_page(60 * 30)(views.search), name='search'),
+    url(r'^tags/?$', cache_page(60 * 30)(views.tags), name='tags'),
+    url(r'^tags/(?P<text>[^/|^$]+)/?$', cache_page(60 * 30)(views.tags), name='tag'),
+    url(r'^today/?$', cache_page(60 * 30)(views.today), name='today'),
+    url(r'^latest/?$', cache_page(60 * 30)(views.latest), name='latest'),
+    url(r'^songs/?$', cache_page(60 * 30)(views.songs), name='songs'),
+    url(r'^songs/(?P<number>[0-9]+)/?$', cache_page(60 * 30)(views.songs), name='song'),
+    url(r'^from/(?P<month>[0-9]{1,2})/(?P<day>[0-9]{1,2})/(?P<year>[0-9]{4})/?$', cache_page(60 * 30)(views.from_date), name='from_date'),
+    url(r'^lastupdated/?$', views.last_updated, name='last_updated'),
 ]
