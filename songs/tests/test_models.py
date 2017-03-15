@@ -1,10 +1,9 @@
-import datetime
-
 from django.test import TestCase
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
+from django.utils import timezone
 
-from songs.models import Song, Tag
+from songs.models import Song, SongUpdateToken, Tag
 
 
 class SongModelTestCase(TestCase):
@@ -23,7 +22,7 @@ class SongModelTestCase(TestCase):
         song_number = 0
         title = 'a'
         url = 'https://zaneswafford.com/'
-        release_date = datetime.date.today()
+        release_date = timezone.now().date()
 
         song = Song.objects.create(song_number=song_number,
                                    title=title,
@@ -40,7 +39,7 @@ class SongModelTestCase(TestCase):
         song_number = 1
         title = 'My Song'
         url = 'htt'
-        release_date = datetime.date.today()
+        release_date = timezone.now().date()
 
         song = Song.objects.create(song_number=song_number,
                                    title=title,
@@ -58,7 +57,7 @@ class SongModelTestCase(TestCase):
         title = 'My Song'
         description = 'This is my song'
         url = 'https://zaneswafford.com/'
-        release_date = datetime.date.today()
+        release_date = timezone.now().date()
         view_count = 987
         like_count = 654
         dislike_count = 321
@@ -85,7 +84,7 @@ class SongModelTestCase(TestCase):
         song_number = 1
         title = 'My Song'
         url = 'https://zaneswafford.com/'
-        release_date = datetime.date.today()
+        release_date = timezone.now().date()
 
         song = Song.objects.create(song_number=song_number,
                                    title=title,
@@ -110,7 +109,7 @@ class TagModelTestCase(TestCase):
 
     def test_tags_must_be_unique(self):
         """
-        Tag objects must have unique text. 
+        Tag objects must have unique text.
         Two tags cannot be the same.
         """
         with self.assertRaises(IntegrityError):
@@ -126,3 +125,25 @@ class TagModelTestCase(TestCase):
         tag = Tag.objects.create(text=text)
 
         self.assertIn(str(tag.text), str(tag))
+
+
+class SongUpdateTokenModelTestCase(TestCase):
+
+    def test_token_without_start_is_invalid(self):
+        """
+        SongUpdateTokens should have a start time when they are created.
+        """
+        with self.assertRaises(IntegrityError):
+            SongUpdateToken.objects.create()
+
+    def test_token_string_representation(self):
+        """
+        A SongUpdateToken should show its start and finish time
+        in its string representation.
+        """
+        start = timezone.now()
+        finish = timezone.now()
+        token = SongUpdateToken.objects.create(started=start, finished=finish)
+
+        self.assertIn(str(token.started), str(token))
+        self.assertIn(str(token.finished), str(token))
