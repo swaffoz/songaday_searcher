@@ -15,17 +15,20 @@ Including another URLconf
 """
 from django.conf.urls import url
 from django.contrib import admin
+from django.views.decorators.cache import cache_page
+
 from songs import views
+
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^$', views.index),
-    url(r'^search/(?P<text>[^/|^$]+)/?$', views.search),
-    url(r'^tags/?$', views.tags),
-    url(r'^tags/(?P<text>[^/|^$]+)/?$', views.tags),
-    url(r'^today/?$', views.today),
-    url(r'^songs/?$', views.songs),
-    url(r'^songs/(?P<number>[0-9]+)/?$', views.songs),
-    url(r'^from/(?P<month>[0-9]{1,2})/(?P<day>[0-9]{1,2})/(?P<year>[0-9]{4})/?$', views.from_date),
+    url(r'^$', cache_page(60 * 60)(views.index)),
+    url(r'^search/(?P<text>[^/|^$]+)/?$', cache_page(60 * 30)(views.search)),
+    url(r'^tags/?$', cache_page(60 * 30)(views.tags)),
+    url(r'^tags/(?P<text>[^/|^$]+)/?$', cache_page(60 * 30)(views.tags)),
+    url(r'^today/?$', cache_page(60 * 30)(views.today)),
+    url(r'^songs/?$', cache_page(60 * 30)(views.songs)),
+    url(r'^songs/(?P<number>[0-9]+)/?$', cache_page(60 * 30)(views.songs)),
+    url(r'^from/(?P<month>[0-9]{1,2})/(?P<day>[0-9]{1,2})/(?P<year>[0-9]{4})/?$', cache_page(60 * 30)(views.from_date)),
     url(r'^lastupdated/?$', views.last_updated),
 ]

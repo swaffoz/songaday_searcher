@@ -3,6 +3,9 @@ billiard==3.5.0.2
 celery==4.0.2
 coverage==4.3.4
 Django==1.10.5
+django-redis==4.7.0
+django-redis-cache==1.7.1
+drfdocs==0.0.11
 kombu==4.0.2
 psycopg2==2.6.2
 pytz==2016.10
