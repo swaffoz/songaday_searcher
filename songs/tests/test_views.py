@@ -5,13 +5,13 @@ from django.test import TestCase, Client
 from django.urls import reverse
 from django.core import serializers
 
-from songs.models import Song, Tag
+from songs.models import Song, Tag, SongUpdateToken
 from songs import views
 
 
 class SongViewTestCase(TestCase):
 
-    fixtures = ['songs.yaml']
+    fixtures = ['songs.yaml', 'tags.yaml', 'songupdatetokens.yaml']
 
     def setUp(self):
         # Create a fake song for today
@@ -198,7 +198,12 @@ class SongViewTestCase(TestCase):
         songs_url = reverse(views.songs)
         response = Client().get(songs_url)
 
-        self.assertEqual(response.status_code, 200)
+        remaining_songs = list(Song.objects.all())
+        for result in serializers.deserialize("json", response.content):
+            if result.object in remaining_songs:
+                remaining_songs.remove(result.object)
+
+        self.assertEqual(len(remaining_songs), 0)
 
     def test_songs_returns_song_for_number(self):
         """
@@ -216,3 +221,18 @@ class SongViewTestCase(TestCase):
                 contains_expected_result = True
 
         self.assertTrue(contains_expected_result)
+
+    def test_last_updated_returns_token(self):
+        """
+        Last Updated view should return a token with last update to songs
+        """
+        last_updated_url = reverse(views.last_updated)
+        response = Client().get(last_updated_url)
+
+        expected_token = SongUpdateToken.objects.get(pk=1)
+        expected_dict = {'started': str(expected_token.started),
+                         'finished': str(expected_token.finished),
+                         'songs_updated': expected_token.song_count}
+        expected_result = json.dumps(expected_dict)
+
+        self.assertTrue(expected_result in str(response.content))
