@@ -119,6 +119,13 @@ USE_L10N = True
 USE_TZ = True
 
 
+# Security Settings
+# https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
+
+SECURE_CONTENT_TYPE_NOSNIFF = True
+SECURE_BROWSER_XSS_FILTER = True
+
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
