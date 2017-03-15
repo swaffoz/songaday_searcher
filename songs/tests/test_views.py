@@ -4,10 +4,20 @@ import datetime
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.core import serializers
+from django.test.utils import override_settings
 
 from songs.models import Song, Tag, SongUpdateToken
 from songs import views
 
+
+# Disable caches during tests. We don't need caches where we're going.
+@override_settings(
+    CACHES={
+        'default': {
+            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
+        },
+    },
+)
 
 class SongViewTestCase(TestCase):
 
@@ -22,7 +32,7 @@ class SongViewTestCase(TestCase):
         """
         Index view should return a 200 OK response to requests
         """
-        index_url = reverse(views.index)
+        index_url = reverse('index')
         response = Client().get(index_url)
 
         self.assertEqual(response.status_code, 200)
@@ -31,17 +41,17 @@ class SongViewTestCase(TestCase):
         """
         Index view should return a help message
         """
-        index_url = reverse(views.index)
+        index_url = reverse('index')
         response = Client().get(index_url)
         message = json.loads(response.content)
 
-        self.assertTrue('response' in message)
+        self.assertTrue('help' in message)
 
     def test_blank_search_returns_nothing(self):
         """
         Search view should return nothing if no search terms are provided
         """
-        search_url = reverse(views.search, kwargs={'text': None})
+        search_url = reverse('search', kwargs={'text': None})
         response = Client().get(search_url)
 
         self.assertTrue(len(response.content) == 0)
@@ -52,7 +62,7 @@ class SongViewTestCase(TestCase):
         """
         expected_result = Song.objects.get(title='Dog Theme #9874')
         search_term = 'dog'
-        search_url = reverse(views.search, kwargs={'text': search_term})
+        search_url = reverse('search', kwargs={'text': search_term})
         response = Client().get(search_url)
 
         contains_expected_result = False
@@ -69,7 +79,7 @@ class SongViewTestCase(TestCase):
         unexpected_results = Song.objects.exclude(title='Dog Theme #9874')
 
         search_term = 'dog'
-        search_url = reverse(views.search, kwargs={'text': search_term})
+        search_url = reverse('search', kwargs={'text': search_term})
         response = Client().get(search_url)
 
         contains_unexpected_result = False
@@ -83,7 +93,7 @@ class SongViewTestCase(TestCase):
         """
         Tags view should return a 200 OK response to requests
         """
-        tags_url = reverse(views.tags)
+        tags_url = reverse('tags')
         response = Client().get(tags_url)
 
         self.assertEqual(response.status_code, 200)
@@ -92,7 +102,7 @@ class SongViewTestCase(TestCase):
         """
         Tags view should return all available tags if tag isn't specified
         """
-        tags_url = reverse(views.tags)
+        tags_url = reverse('tags')
         response = Client().get(tags_url)
 
         expected_results = Tag.objects.all()
@@ -109,7 +119,7 @@ class SongViewTestCase(TestCase):
         """
         tag_id = 3
         tag_text = 'dogs'
-        tag_url = reverse(views.tags, kwargs={'text': tag_text})
+        tag_url = reverse('tag', kwargs={'text': tag_text})
         response = Client().get(tag_url)
 
         expected_result = Song.objects.get(tags__in=[tag_id])
@@ -126,7 +136,7 @@ class SongViewTestCase(TestCase):
         """
         tag_id = 3
         tag_text = 'dogs'
-        tag_url = reverse(views.tags, kwargs={'text': tag_text})
+        tag_url = reverse('tag', kwargs={'text': tag_text})
         response = Client().get(tag_url)
 
         unexpected_results = Song.objects.exclude(tags__in=[tag_id])
@@ -141,7 +151,7 @@ class SongViewTestCase(TestCase):
         """
         Today view should return a 200 OK response to requests
         """
-        today_url = reverse(views.today)
+        today_url = reverse('today')
         response = Client().get(today_url)
 
         self.assertEqual(response.status_code, 200)
@@ -150,10 +160,35 @@ class SongViewTestCase(TestCase):
         """
         Today view should return a single song for today
         """
-        today_url = reverse(views.today)
+        today_url = reverse('today')
         response = Client().get(today_url)
 
         expected_result = Song.objects.get(release_date=datetime.date.today())
+        contains_expected_result = False
+
+        for result in serializers.deserialize("json", response.content):
+            if result.object == expected_result:
+                contains_expected_result = True
+
+        self.assertTrue(contains_expected_result)
+
+    def test_latest_returns_200_ok(self):
+        """
+        Latest view should return a 200 OK response to requests
+        """
+        latest_url = reverse('latest')
+        response = Client().get(latest_url)
+
+        self.assertEqual(response.status_code, 200)
+
+    def test_latest_returns_todays_song(self):
+        """
+        Latest view should return a single song with latest release_date
+        """
+        latest_url = reverse('latest')
+        response = Client().get(latest_url)
+
+        expected_result = Song.objects.order_by('-release_date')[0]
         contains_expected_result = False
 
         for result in serializers.deserialize("json", response.content):
@@ -167,7 +202,7 @@ class SongViewTestCase(TestCase):
         Date view should return a single song for the date provided
         """
         test_date = datetime.date(2017, 2, 27)
-        date_url = reverse(views.from_date, kwargs={
+        date_url = reverse('from_date', kwargs={
                            'month': test_date.month,
                            'day': test_date.day,
                            'year': test_date.year})
@@ -186,7 +221,7 @@ class SongViewTestCase(TestCase):
         """
         Songs view should return a 200 OK response to requests
         """
-        songs_url = reverse(views.songs)
+        songs_url = reverse('songs')
         response = Client().get(songs_url)
 
         self.assertEqual(response.status_code, 200)
@@ -195,7 +230,7 @@ class SongViewTestCase(TestCase):
         """
         Songs view should return all songs if none is specified
         """
-        songs_url = reverse(views.songs)
+        songs_url = reverse('songs')
         response = Client().get(songs_url)
 
         remaining_songs = list(Song.objects.all())
@@ -210,7 +245,7 @@ class SongViewTestCase(TestCase):
         Songs view should return a single song for the song number provided
         """
         song_number = 9876
-        songs_url = reverse(views.songs, kwargs={'number': song_number})
+        songs_url = reverse('song', kwargs={'number': song_number})
         response = Client().get(songs_url)
 
         expected_result = Song.objects.get(song_number=song_number)
@@ -226,7 +261,7 @@ class SongViewTestCase(TestCase):
         """
         Last Updated view should return a token with last update to songs
         """
-        last_updated_url = reverse(views.last_updated)
+        last_updated_url = reverse('last_updated')
         response = Client().get(last_updated_url)
 
         expected_token = SongUpdateToken.objects.get(pk=1)
