@@ -58,6 +58,15 @@ def today(request):
             "json", [song], use_natural_foreign_keys=True)
         return HttpResponse(data, content_type='application/json')
 
+def latest(request):
+    try:
+        song = Song.objects.order_by('-release_date')[0]
+    except IndexError:
+        return HttpResponseNotFound(content_type='application/json')
+    else:
+        data = serializers.serialize(
+            "json", [song], use_natural_foreign_keys=True)
+        return HttpResponse(data, content_type='application/json')
 
 def from_date(request, month=None, day=None, year=None):
     try:
