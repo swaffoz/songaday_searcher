@@ -1,12 +1,3 @@
--   model: songs.tag
-    pk: 1
-    fields: {text: folk}
--   model: songs.tag
-    pk: 2
-    fields: {text: rock}
--   model: songs.tag
-    pk: 3
-    fields: {text: dogs}
 -   model: songs.song
     pk: 1
     fields:
