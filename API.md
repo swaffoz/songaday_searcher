@@ -8,6 +8,7 @@ Song A Day Searcher API
     - [Song With Number](#song-with-number)
     - [Song From Date](#song-from-date)
     - [Song For Today](#song-for-today)
+    - [Latest Song](#latest-song)
 - [Tags](#tags)
     - [All Tags](#tags)
     - [Songs With Tag](#songs-with-tag)
@@ -164,9 +165,42 @@ Returns a single song with the given date
 * * *
 
 ## Song For Today
-Returns a single song for today. Server date in Eastern Standard Time UTC-05:00.
+Returns a single song for today. Server date in Eastern Standard Time UTC-05:00. Will return 404 if there is no song with a release date of today in the spreadsheet. To always get the latest song, see [Latest Song](#latest-song)
 
 ### URL: `/today`
+### Method: `GET`
+- Example Response:
+```
+[{
+"model": "songs.song",
+"pk": 12345678,
+"fields": {
+  "title": "A Song About Dogs",
+  "description": "This is a song about dogs",
+  "url": "https://youtu.be/abcdefghijk",
+  "download_url": "https://jonathanmann.bandcamp.com/track/dog-song",
+  "view_count": 1234,
+  "like_count": 123,
+  "dislike_count": 1,
+  "song_number": 98765,
+  "thumbnail_url": "https://i.ytimg.com/vi/abcdefghijk/default.jpg",
+  "release_date": "2017-03-15",
+  "tags": [
+    [
+      9876,
+      "dogs"
+    ]
+  ]
+}
+}]
+```
+
+* * *
+
+## Latest Song
+Returns the latest song. May be different than the [Song For Today](#song-for-today) if, for example, the songs spreadsheet has not been updated in a while.
+
+### URL: `/latest`
 ### Method: `GET`
 - Example Response:
 ```
