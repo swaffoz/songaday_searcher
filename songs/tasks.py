@@ -8,7 +8,7 @@ from .fetch_songs import fetch_songs_from_spreadsheet, fetch_youtube_metadata_fo
 from .models import Song, Tag, SongUpdateToken
 
 
-@periodic_task(run_every=(crontab(minute='*/30')), name="fetch_and_update_songs")
+@periodic_task(run_every=(crontab(minute=0, hour='*/1')), name="fetch_and_update_songs")
 def fetch_and_update_songs():
     token = SongUpdateToken.objects.create(started=timezone.now())
 
