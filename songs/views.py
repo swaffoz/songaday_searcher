@@ -10,7 +10,8 @@ from .models import Song, Tag, SongUpdateToken
 
 
 def index(request):
-    data = {'response': 'Help message goes here'}
+    data = {'help': 'See API documentation here: ' +
+            'https://github.com/zaneswafford/songaday_searcher/blob/master/API.md'}
     return HttpResponse(json.dumps(data), content_type='application/json')
 
 
