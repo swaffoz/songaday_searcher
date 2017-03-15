@@ -77,8 +77,8 @@ WSGI_APPLICATION = 'songaday_searcher.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'songaday_searcher',
-        'USER': 'songaday_searcher',
+        'NAME': os.environ['DJANGO_DATABASE_NAME'],
+        'USER': os.environ['DJANGO_DATABASE_USER'],
         'PASSWORD': os.environ['DJANGO_DATABASE_PASSWORD'],
         'HOST': 'localhost',
         'PORT': '',
