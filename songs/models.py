@@ -29,6 +29,7 @@ class Song(models.Model):
                              MinLengthValidator(2)])
     description = models.TextField(blank=True, null=True)
     url = models.CharField(max_length=255, validators=[MinLengthValidator(4)])
+    download_url = models.CharField(max_length=255, null=True, blank=True)
     view_count = models.IntegerField(null=True, blank=True)
     like_count = models.IntegerField(null=True, blank=True)
     dislike_count = models.IntegerField(null=True, blank=True)
@@ -39,3 +40,13 @@ class Song(models.Model):
 
     def __str__(self):
         return str(self.song_number) + ' ' + self.title
+
+
+class SongUpdateToken(models.Model):
+    started = models.DateTimeField()
+    finished = models.DateTimeField(null=True, blank=True)
+    song_count = models.IntegerField(null=True)
+
+    def __str__(self):
+        return ('started: ' + str(self.started) + '; ' +
+                'finished: ' + str(self.finished))
