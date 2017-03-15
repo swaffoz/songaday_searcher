@@ -1,11 +1,12 @@
 import json
 import datetime
 
-from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest
+from django.http import HttpResponse, HttpResponseNotFound, HttpResponseBadRequest, HttpResponseServerError
 from django.core import serializers
 from django.contrib.postgres.search import TrigramSimilarity
+from django.utils import timezone
 
-from .models import Song, Tag
+from .models import Song, Tag, SongUpdateToken
 
 
 def index(request):
@@ -48,7 +49,7 @@ def tags(request, text=None):
 
 def today(request):
     try:
-        song = Song.objects.get(release_date=datetime.date.today())
+        song = Song.objects.get(release_date=timezone.now().date())
     except Song.DoesNotExist:
         return HttpResponseNotFound(content_type='application/json')
     else:
@@ -84,5 +85,18 @@ def songs(request, number=None):
             "json", [song], use_natural_foreign_keys=True)
     except Song.DoesNotExist:
         return HttpResponseNotFound(content_type='application/json')
+    else:
+        return HttpResponse(data, content_type='application/json')
+
+
+def last_updated(request):
+    try:
+        update_token = SongUpdateToken.objects.last()
+        update_token_dict = {'started': str(update_token.started),
+                             'finished': str(update_token.finished),
+                             'songs_updated': update_token.song_count}
+        data = json.dumps(update_token_dict)
+    except Exception as e:
+        return HttpResponseServerError(content_type='application/json')
     else:
         return HttpResponse(data, content_type='application/json')
