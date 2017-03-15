@@ -10,7 +10,7 @@ Song A Day Searcher API
     - [Song For Today](#song-for-today)
 - [Tags](#tags)
     - [All Tags](#tags)
-    - [Song With Tag](#song-with-tag)
+    - [Songs With Tag](#songs-with-tag)
 - [Last Updated](#last-updated)
 
 * * *
