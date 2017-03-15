@@ -27,4 +27,5 @@ urlpatterns = [
     url(r'^songs/?$', views.songs),
     url(r'^songs/(?P<number>[0-9]+)/?$', views.songs),
     url(r'^from/(?P<month>[0-9]{1,2})/(?P<day>[0-9]{1,2})/(?P<year>[0-9]{4})/?$', views.from_date),
+    url(r'^lastupdated/?$', views.last_updated),
 ]
