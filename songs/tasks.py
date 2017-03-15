@@ -71,8 +71,8 @@ def update_song_from_dict(song_dict):
 def tag_from_string(s):
     tag = None
     try:
-        tag = Tag.objects.get(text=s.lower())
+        tag = Tag.objects.get(text=s.lower().strip())
     except Tag.DoesNotExist:
-        tag = Tag.objects.create(text=s.lower())
+        tag = Tag.objects.create(text=s.lower().strip())
     finally:
         return tag
