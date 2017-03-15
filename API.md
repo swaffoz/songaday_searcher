@@ -64,7 +64,9 @@ Returns an array of songs that match a provided string. The songs are matched by
 * * *
 
 ## Songs
-Returns an array of all songs.
+Returns an array of all songs. 
+
+**Warning!** This will return a large dump of data.
 
 ### URL: `/songs`
 ### Method: `GET`
@@ -231,7 +233,9 @@ Returns the latest song. May be different than the [Song For Today](#song-for-to
 * * *
 
 ## Tags
-Returns an array of all available tags
+Returns an array of all available tags. 
+
+**Warning!** This will return a large dump of data.
 
 ### URL: `/tags`
 ### Method: `GET`
