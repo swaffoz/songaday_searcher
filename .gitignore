@@ -4,3 +4,4 @@ __pycache__/
 celerybeat-schedule
 celerybeat.pid
 deploy/ssh-keys/
+deploy/deploy.retry
