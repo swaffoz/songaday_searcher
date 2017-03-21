@@ -1,0 +1,17 @@
+##
+# Set up all the dependencies in a virtualenv required by the Django app
+##
+- name: Make a virtualenv directory
+  file: path={{ venv_dir }} state=directory
+
+- name: Create virtualenv
+  command: virtualenv -p python3.5 "{{ venv_dir }}"
+           creates="{{ venv_dir }}/bin/activate"
+
+- name: Install dependencies
+  pip:    requirements={{ app_dir }}/requirements.txt
+          virtualenv={{ venv_dir }}
+          virtualenv_python=python3
+
+- name: Create the .env file for running ad-hoc python commands in our virtualenv
+  template: src=env dest={{ app_dir }}/.env

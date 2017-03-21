@@ -1,0 +1,18 @@
+##
+# Set up init script for executing gunicorn_start script
+##
+- name: Write the init script
+  template: src={{ app_name }}_init
+            dest=/usr/local/etc/rc.d/{{ app_name }}
+  become: yes
+
+- name: Make the init script executable
+  raw: cd /usr/local/etc/rc.d/; chmod +x {{ app_name }}
+  become: yes
+
+- name: Enable the init script at boot
+  command: sysrc {{ app_name }}_enable=YES
+  become: yes
+  notify:
+    - restart app
+    - restart nginx

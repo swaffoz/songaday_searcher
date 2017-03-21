@@ -1,0 +1,41 @@
+# App Name
+app_name: songaday_searcher
+
+# Deployer User
+deployer_user: freebsd
+
+# SSH Keys Directory
+ssh_dir: /deploy/authorized_keys
+
+# Github Code's Repo URL
+code_repository_url: https://github.com/zaneswafford/songaday_searcher
+
+# App Directory
+app_dir: /home/{{ deployer_user }}/{{app_name}}
+
+# DB Configuration
+db_password: "{{ lookup('env', 'DJANGO_DATABASE_PASSWORD') }}"
+db_name: "{{ lookup('env', 'DJANGO_DATABASE_NAME') }}"
+db_user: "{{ lookup('env', 'DJANGO_DATABASE_USER') }}"
+db_url: postgresql://{{deployer_user}}:{{db_password}}@localhost/{{app_name}}
+
+# Application Dependencies Setup
+venv_dir: '/home/{{ deployer_user }}/envs/{{ app_name }}'
+venv_python: '{{ venv_dir }}/bin/python3.5'
+
+# Deploy Dir in App Directory
+deploy_dir: '{{ app_dir }}/deploy'
+
+# Remote Server Details
+server_ip: 159.203.165.95
+wsgi_server_port: 8000
+
+# WSGI Vars
+django_wsgi_module: songaday_searcher.wsgi
+django_settings_module: songaday_searcher.settings
+django_secret_key: "{{ lookup('env', 'DJANGO_SECRET_KEY') }}"
+database_url: '{{ db_url }}'
+
+# Supervisor Vars
+escaped_secret_key: "{{ lookup('env', 'DJANGO_SECRET_KEY').replace('%', '%%') }}"
+youtube_api_key: "{{ lookup('env', 'YOUTUBE_API_KEY') }}"

@@ -1,0 +1,51 @@
+##
+# Update the pkgng database and install base required packages
+##
+
+- name: Install required packages
+  package: name={{item}} state=present
+  become: yes
+  with_items:
+    - vim-lite
+    - git-lite
+    - python27
+    - python35
+    - openntpd
+    - sshguard-pf
+
+- name: Make sure pip is installed for python 3.5
+  command: python3.5 -m ensurepip
+  become: yes
+
+- name: Install virtualenv module
+  pip: name=virtualenv state=present executable=/usr/local/bin/pip3
+  become: yes
+
+- name: Set server time
+  command: cp /usr/share/zoneinfo/America/New_York /etc/localtime
+  become: yes
+
+- name: Enable and start time daemon
+  service: name=openntpd enabled=yes state=started
+  become: yes
+
+- name: Enable and start SSHGuard
+  service: name=sshguard enabled=yes state=started
+  become: yes
+
+- name: Upload firewall rules
+  template: src=pf.conf dest=/etc/pf.conf validate='pfctl -nf %s'
+  become: yes
+
+- name: Enable and start firewall
+  service: name=pf enabled=yes state=started
+  # perform this and ignore the response because PF will drop the
+  # SSH connection if its service is not running
+  async: 0
+  poll: 0
+  ignore_errors: true
+  become: yes
+  notify:
+    - reload pf
+
+

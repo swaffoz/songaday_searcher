@@ -1,0 +1,38 @@
+##
+# Set up Supervisor to execute celery and celery beat tasks
+##
+
+- name: Create the directory for celery log files
+  file: 
+    path: /var/log/celery/ 
+    state: directory 
+    owner: '{{ deployer_user }}'
+  become: yes
+
+- name: Touch the log files for the celery worker
+  file: 
+    path: /var/log/celery/{{ app_name }}_worker.log 
+    state: touch 
+    owner: '{{ deployer_user }}'
+  become: yes
+  
+- name: Touch the log files for celery beat
+  file: 
+    path: /var/log/celery/{{ app_name }}_beat.log
+    state: touch 
+    owner: '{{ deployer_user }}'
+  become: yes
+
+- name: Install supervisor
+  package: name=py27-supervisor state=present
+  become: yes
+
+- name: Upload the supervisor conf file
+  template: src=supervisord.conf dest=/usr/local/etc/supervisord.conf
+  become: yes
+
+- name: Enable and start supervisor
+  service: name=supervisord enabled=yes
+  become: yes
+  notify:
+    - restart supervisord

@@ -1,0 +1,22 @@
+#!/bin/sh
+
+# PROVIDE: {{ app_name }}
+
+. /etc/rc.subr
+
+name="{{ app_name }}"
+rcvar=`set_rcvar`
+start_cmd="{{ app_name }}_start"
+stop_cmd=":"
+pidfile="/var/run/{{ app_name }}.pid"
+
+load_rc_config $name
+ 
+{{ app_name }}_start()
+{
+    if checkyesno ${rcvar}; then
+        /bin/sh {{ deploy_dir }}/gunicorn_start &
+    fi
+}
+ 
+run_rc_command "$1"

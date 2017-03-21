@@ -1,0 +1,11 @@
+##
+# Set up and configure redis
+##
+
+- name: Install redis
+  package: name=redis state=present
+  become: yes
+
+- name: Start redis
+  service: name=redis enabled=yes state=started
+  become: yes

@@ -1,0 +1,10 @@
+##
+# Clone and pull the repo
+##
+- name: Install git
+  package: name=git-lite state=present
+  become: yes
+
+- name: Clone or pull the latest code
+  git: repo={{ code_repository_url }}
+        dest={{ app_dir }}

@@ -1,0 +1,46 @@
+##
+# Set up and configure postgres
+##
+
+- name: Install Postgres
+  package: name={{ item }} state=present
+  become: yes
+  with_items:
+    - postgresql96-contrib
+    - postgresql96-server
+
+- name: Install psycopg2
+  pip: name=psycopg2 state=present
+  become: yes
+  
+- name: Enable Postgres at boot
+  service: name=postgresql enabled=yes 
+  become: yes
+
+- name: Init Postgres db
+  command: service postgresql initdb --encoding=utf-8 -D /usr/local/pgsql/data96
+  become: yes
+  args:
+    creates: /var/db/postgres/data96
+
+- name: Start Postgres
+  service: name=postgresql state=started
+  become: yes
+
+- name: Create database
+  postgresql_db: name={{ app_name }}
+  become_user: postgres
+
+- name: Create trigram extension
+  postgresql_ext: db={{ app_name }} name=pg_trgm state=present
+  become: yes
+
+- name: Configure a new Postgres user
+  postgresql_user: db={{ app_name }}
+                   name={{ db_user }}
+                   password={{ db_password }}
+                   priv=ALL
+                   role_attr_flags=NOSUPERUSER
+  become_user: postgres
+  notify:
+    - restart postgres

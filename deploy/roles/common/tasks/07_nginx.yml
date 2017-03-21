@@ -1,0 +1,20 @@
+##
+# Configure nginx web server
+##
+- name: Install nginx
+  package: name=nginx state=present
+  become: yes
+
+- name: Write nginx conf file
+  template: src=nginx.conf dest=/usr/local/etc/nginx/nginx.conf
+  become: yes
+
+- name: Create sites-enabled directory
+  file: path=/usr/local/etc/nginx/sites-enabled state=directory
+  become: yes
+
+- name: Write app specific nginx conf file
+  template: src={{ app_name }}.conf dest=/usr/local/etc/nginx/sites-enabled/{{ app_name }}.conf
+  become: yes
+  notify:
+    - restart nginx
