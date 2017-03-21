@@ -50,7 +50,7 @@ def tags(request, text=None):
 
 def today(request):
     try:
-        song = Song.objects.get(release_date=timezone.now().date())
+        song = Song.objects.get(release_date=timezone.localtime(timezone.now()).date())
     except Song.DoesNotExist:
         return HttpResponseNotFound(content_type='application/json')
     else:

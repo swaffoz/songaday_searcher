@@ -1,6 +1,8 @@
 import datetime
+import pytz
 
 from django.utils import timezone
+from django.conf import settings
 from celery.task.schedules import crontab
 from celery.decorators import periodic_task
 
@@ -10,7 +12,9 @@ from .models import Song, Tag, SongUpdateToken
 
 @periodic_task(run_every=(crontab(minute=0, hour='*/1')), name="fetch_and_update_songs")
 def fetch_and_update_songs():
-    token = SongUpdateToken.objects.create(started=timezone.now())
+    timezone.activate(pytz.timezone(settings.TIME_ZONE))
+    
+    token = SongUpdateToken.objects.create(started=timezone.localtime(timezone.now()))
 
     songs = fetch_songs_from_spreadsheet('https://spreadsheets.google.com/feeds/cells/' +
                                          '1HRfMfK1IF3sP9tTmBe_eXClBuG-Go9BCXmFK9oipSvA' +
@@ -27,7 +31,7 @@ def fetch_and_update_songs():
 
     print('Updated Songs in Database')
 
-    token.finished = timezone.now()
+    token.finished = timezone.localtime(timezone.now())
     token.song_count = len(updated_songs)
     token.save()
 
