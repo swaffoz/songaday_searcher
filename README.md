@@ -3,6 +3,8 @@ Song A Day Searcher
 
 Built with ❤️ and [Django](https://www.djangoproject.com) in Kansas.
 
+A running instance is available [here](http://159.203.165.95/).
+
 API documentation available  [here](https://github.com/zaneswafford/songaday_searcher/blob/master/API.md).
 
 Deploy documentation available  [here](https://github.com/zaneswafford/songaday_searcher/blob/master/DEPLOY.md).
