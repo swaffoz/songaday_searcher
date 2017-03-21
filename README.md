@@ -18,10 +18,11 @@ Run via:
 `python manage.py runserver`
 
 Run the background song fetcher via:
-```
-celery -A songaday_searcher beat -l info
-celery -A songaday_searcher worker -l info
-```
+
+`celery -A songaday_searcher beat -l info`
+
+`celery -A songaday_searcher worker -l info`
+
 
 Run tests via:
 `python manage.py test`
