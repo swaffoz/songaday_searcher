@@ -5,6 +5,8 @@ Built with ❤️ and [Django](https://www.djangoproject.com) in Kansas.
 
 API documentation available  [here](https://github.com/zaneswafford/songaday_searcher/blob/master/API.md).
 
+Deploy documentation available  [here](https://github.com/zaneswafford/songaday_searcher/blob/master/DEPLOY.md).
+
 * * *
 
 Install dependencies via:
