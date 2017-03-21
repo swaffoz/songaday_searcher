@@ -3,5 +3,5 @@ __pycache__/
 .coverage
 celerybeat-schedule
 celerybeat.pid
-deploy/ssh-keys/
+deploy/ssh-keys/*.pub
 deploy/deploy.retry
